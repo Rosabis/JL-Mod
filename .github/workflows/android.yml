@@ -66,7 +66,8 @@ jobs:
         uses: actions/upload-artifact@v4.3.3
         with:
           name: "JL-Mod_${{ steps.get_version.outputs.version }}"
-          path: app/build/outputs/apk/emulator/release/*.apk
+          # 收集所有构建出的 APK，避免路径不匹配导致未上传
+          path: app/build/outputs/apk/**/*.apk
 
       - name: Upload a Build Artifact (sym)
         uses: actions/upload-artifact@v4.3.3
