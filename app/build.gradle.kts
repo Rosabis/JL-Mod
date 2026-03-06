@@ -34,19 +34,6 @@ android {
         buildConfig = true
     }
 
-    signingConfigs {
-        create("emulator") {
-            rootProject.file("keystore.properties").takeIf(File::isFile)?.inputStream().use {
-                val keystoreProperties = Properties()
-                keystoreProperties.load(it)
-                keyAlias = keystoreProperties["keyAlias"] as String
-                keyPassword = keystoreProperties["keyPassword"] as String
-                storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
-                storePassword = keystoreProperties["storePassword"] as String
-            }
-        }
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -68,7 +55,8 @@ android {
     productFlavors {
         create("emulator") { // variant dimension for create emulator
             buildConfigField("boolean", "FULL_EMULATOR", "true")
-            signingConfig = signingConfigs.getByName("emulator")
+            // 使用默认 debug keystore 对 emulator 变种（包括 release）签名
+            signingConfig = signingConfigs.getByName("debug")
             versionNameSuffix = System.getenv("VERSION_SUFFIX")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
